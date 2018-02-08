@@ -48,7 +48,7 @@ var redis = require("redis");
 redisclient = redis.createClient(6379,"127.0.0.1");
 redisclient.info(function(err,response){
 	if (err == null){
-		console.log("redis client connect suc");
+		console.log("redis client connect success");
 	}
 	else{
 		console.log(err);

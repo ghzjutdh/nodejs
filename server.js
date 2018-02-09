@@ -55,14 +55,18 @@ redisclient.info(function(err,response){
 	}
 });
 
+var loadModule = [playerManager,roomManager];
 var WebSocketServer = require('ws').Server;
 var wss = new WebSocketServer({ port: 8888 });
 wss.on('connection', function (ws) {
     console.log('client connected');
     // ws.player = {userid:"noname"};
     // ws.room = {};
-    playerManager.onConnection(ws);
-    roomManager.onConnection(ws);
+    // playerManager.onConnection(ws);
+    // roomManager.onConnection(ws);
+    for (var i = 0;i < loadModule.length;i++){
+        loadModule[i].onConnection(ws);
+    }
     testManager.onConnection(ws);
     ws.on('message', function (message) {
         console.log(message);
@@ -111,7 +115,7 @@ wss.on('connection', function (ws) {
         // if (key == 'login'){
         //     ws.player.userid = data;
         // }
-        playerManager.onMessage(key,data,ws);
+        // playerManager.onMessage(key,data,ws);
         // //joinroom
         // if (key == 'joinroom'){
         //     ws.room.roomid = data;
@@ -124,11 +128,17 @@ wss.on('connection', function (ws) {
         //         }
         //     });
         // }
-        roomManager.onMessage(key,data,ws);
+        // roomManager.onMessage(key,data,ws);
+        for (var i = 0;i < loadModule.length;i++){
+            loadModule[i].onMessage(key,data,ws);
+        }
     });
     ws.on('close', function(close) {
-        playerManager.onMessClose(ws);
-        roomManager.onMessClose(ws);
+        // playerManager.onMessClose(ws);
+        // roomManager.onMessClose(ws);
+        for (var i = 0;i < loadModule.length;i++){
+            loadModule[i].onMessClose(ws);
+        }
         testManager.onMessClose(ws);
     });
 });

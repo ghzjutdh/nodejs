@@ -79,6 +79,11 @@ class chatroomEvent extends superEvent {
 	onMessClose(user){
 		super.onMessClose(user);
 	}
+
+    onEvent(key,data,cb){
+        var ret = super.onEvent(key,data,cb);
+        return false;
+    }
 }
 exports.Class = chatroom;
 exports.Event = chatroomEvent;

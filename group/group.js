@@ -140,6 +140,10 @@ class groupEvent {
             this._removeObjfromGroup(user,_id);
         }
     }
+
+    onEvent(key,data,cb){
+        return false;
+    }
 }
 exports.Class = group;
 exports.Event = groupEvent;

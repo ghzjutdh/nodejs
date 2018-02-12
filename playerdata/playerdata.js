@@ -60,6 +60,10 @@ class playerdataEvent {
 	onMessClose(user){
 		//
 	}
+
+    onEvent(key,data,cb){
+        return false;
+    }
 }
 
 module.exports = playerdataEvent;

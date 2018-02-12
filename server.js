@@ -36,6 +36,11 @@
 //     console.log('server bound');
 // });
 require("./global.js");
+var eventmanager = require("./eventmanager.js");
+global.Global_EventManager = new eventmanager();
+
+var redismanager = require("./redismanager.js");
+global.Global_RedisManager = new redismanager();
 
 var room = require("./group/chatroom.js").Event;
 var roomManager = new room();
@@ -44,18 +49,15 @@ var playerManager = new playerdata();
 var test = require("./test/test.js");
 var testManager = new test();
 
-var redis = require("redis");
-redisclient = redis.createClient(6379,"127.0.0.1");
-redisclient.info(function(err,response){
-	if (err == null){
-		console.log("redis client connect success");
-	}
-	else{
-		console.log(err);
-	}
-});
 
-var loadModule = [playerManager,roomManager];
+
+var loadModule = [playerManager,roomManager,testManager];
+//注册需要event的模块
+global.Global_EventManager.setRedisClient(redisclient);
+for (var i = 0;i < loadModule.length;i++){
+    global.Global_EventManager.registDeleget(loadModule[i]);
+}
+
 var WebSocketServer = require('ws').Server;
 var wss = new WebSocketServer({ port: 8888 });
 wss.on('connection', function (ws) {
@@ -67,7 +69,7 @@ wss.on('connection', function (ws) {
     for (var i = 0;i < loadModule.length;i++){
         loadModule[i].onConnection(ws);
     }
-    testManager.onConnection(ws);
+    // testManager.onConnection(ws);
     ws.on('message', function (message) {
         console.log(message);
         //解析数据
@@ -110,7 +112,7 @@ wss.on('connection', function (ws) {
 				// }
 	   //      });
     //     }
-        testManager.onMessage(key,data,ws,redisclient);
+        // testManager.onMessage(key,data,ws,redisclient);
         // //login
         // if (key == 'login'){
         //     ws.player.userid = data;
@@ -139,7 +141,7 @@ wss.on('connection', function (ws) {
         for (var i = 0;i < loadModule.length;i++){
             loadModule[i].onMessClose(ws);
         }
-        testManager.onMessClose(ws);
+        // testManager.onMessClose(ws);
     });
 });
 

@@ -25,9 +25,20 @@ class testEvent {
 		if (user == null){
             return false;
         }
+        var glrm = global.Global_RedisManager;
 		//保存数据
         if (key == 'testset'){
-            redis.set("test",data,function(err,response){
+            // redis.set("test",data,function(err,response){
+            //     if (err == null){
+            //         console.log("redis value set suc");
+            //         Global_SendMessage(user,key+'|suc');
+            //     }
+            //     else{
+            //         console.log(err);
+            //         Global_SendMessage(user,key+'|err');
+            //     }
+            // });
+            glrm.set("test",data,function(err,response){
                 if (err == null){
                     console.log("redis value set suc");
                     Global_SendMessage(user,key+'|suc');
@@ -40,7 +51,17 @@ class testEvent {
         }
         //读取数据
         if (key == 'testget'){
-            redis.get("test",function(err,response){
+            // redis.get("test",function(err,response){
+            //     if (err == null){
+            //         console.log("redis value get suc");
+            //         Global_SendMessage(user,key+'|'+response);
+            //     }
+            //     else{
+            //         console.log(err);
+            //         Global_SendMessage(user,key+'|err');
+            //     }
+            // });
+            glrm.get("test",function(err,response){
                 if (err == null){
                     console.log("redis value get suc");
                     Global_SendMessage(user,key+'|'+response);
@@ -56,6 +77,13 @@ class testEvent {
 	onMessClose(user){
 		//
 	}
+
+    onEvent(key,data,cb){
+        // if (key == ""){
+        //     return true;//返回true 则截断改消息，意味着其它模块收不到
+        // }
+        return false;
+    }
 }
 
 module.exports = testEvent;
